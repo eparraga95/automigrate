@@ -55,8 +55,8 @@ require("dotenv").config({ path: ".env" });
   */
 
   const TITULO_DO_CURSO = 'M2 - Modelo' 
-  const TITULO_DA_AULA = "Teste Titulo Com Emoji 🏆"
-  const NOVA_URL = `https://conteudo-kenzie-fullstack.vercel.app/modulo_2/sprint_3/async_e_await/aula.html
+  const TITULO_DA_AULA = "S2A05 |  📘  Aula - POO: Programação Orientada a Objetos"
+  const NOVA_URL = `https://conteudo-kenzie-fullstack.vercel.app/modulo_2/sprint_2/semana_a/terca/programacao_orientada_a_objetos/aula.html
   `
 
   const browser = await puppeteer.launch();
