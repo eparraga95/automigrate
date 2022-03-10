@@ -3,7 +3,7 @@ require("dotenv").config({ path: ".env" });
 
 (async () => {
 
-  /* ENTENDA O FUNCIONAMENTO
+  /* FUNCIONAMENTO
 
   ######################## ENTRADAS #############################
   
