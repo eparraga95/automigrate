@@ -36,9 +36,10 @@ $ yarn
 
 #### TITULO_DA_AULA
 
-  Pode ser copiado direto da página do Curso, exemplo:
+   Pode ser copiado direto da página do Curso, clicando em EDITAR
+  exemplo:
 
-  https://i.imgur.com/t7XSQTt.png
+  https://i.imgur.com/pTpx1gD.png
 
 #### URL_NOVA
 

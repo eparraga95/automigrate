@@ -19,9 +19,10 @@ require("dotenv").config({ path: ".env" });
 
   ====================== TITULO_DA_AULA ==========================
 
-  Pode ser copiado direto da página do Curso, exemplo:
+  Pode ser copiado direto da página do Curso, clicando em EDITAR
+  exemplo:
 
-  https://i.imgur.com/t7XSQTt.png
+  https://i.imgur.com/pTpx1gD.png
 
   ========================= URL_NOVA =============================
 
@@ -55,9 +56,8 @@ require("dotenv").config({ path: ".env" });
   */
 
   const TITULO_DO_CURSO = 'M2 - Modelo' 
-  const TITULO_DA_AULA = "S2A05 |  📘  Aula - POO: Programação Orientada a Objetos"
-  const NOVA_URL = `https://conteudo-kenzie-fullstack.vercel.app/modulo_2/sprint_2/semana_a/terca/programacao_orientada_a_objetos/aula.html
-  `
+  const TITULO_DA_AULA = "S2A07 |  📘  Aula - POO:  Acessores Getters e Setters para Objetos"
+  const NOVA_URL = `https://conteudo-kenzie-fullstack.vercel.app/modulo_2/sprint_2/semana_a/terca/acessores_getters_e_setters_para_objetos/aula.html`
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
