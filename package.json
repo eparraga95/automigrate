@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "justdoit": "node ./src/automigrate.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "puppeteer": "^13.5.1",
+    "puppeteer-core": "^13.5.1"
+  }
+}
