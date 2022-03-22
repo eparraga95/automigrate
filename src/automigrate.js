@@ -3,70 +3,36 @@ require("dotenv").config({ path: ".env" });
 
 (async () => {
 
-  /* FUNCIONAMENTO
+  // LEIA O README ANTES DE USAR!
 
-  ######################## ENTRADAS #############################
+  // ========= CONFIGURAÇÕES ========
+
+  // Título correto do Curso
+  const TITULO_DO_CURSO = "M2 - Modelo"
+
+  // Título correto da Aula
+  const TITULO_DA_AULA = "Teste Titulo Com Emoji 🏆"
+
+  // CTRL + A  e  CTRL + C no Navegador com a página do localhost aberta através do LiveServer
+  // Deve começar com http:// ...
+  const LOCALHOST_URL = "http://127.0.0.1:5500/modulo_4/sprint_1/quarta/services_controllers_e_primeiro_crud/aula.html"
+
   
-  Para o correto funcionamento da inserção do conteúdo no Canvas,
-  As entradas devem ser preenchidas corretamente.
-
-  ===================== TITULO_DO_CURSO =========================
-
-  Acessar o Curso no Canvas e copiar o nome que aparece
-  no canto superior esquerdo. Segue um exemplo visual abaixo:
-
-  https://i.imgur.com/QiFHenZ.png
-
-  ====================== TITULO_DA_AULA ==========================
-
-  Pode ser copiado direto da página do Curso, clicando em EDITAR
-  exemplo:
-
-  https://i.imgur.com/pTpx1gD.png
-
-  ========================= URL_NOVA =============================
-
-  Assumindo que você quer fazer a migração do conteúdo, você deve
-  ter acesso ao repositório em que o mesmo se encontra. Seguindo os
-  passos abaixo, podemos gerar a nova URL:
-
-  1 - Abrir o arquivo com o LiveServer
-
-  2 - Copiar a URL (mesmo com o http://seu.ip.local/)
-
-  3 - Abrir este CODE PEN: https://codepen.io/eparragakenzie/pen/PoOgKOp
-
-  4 - Colocar a URL copiada na Input
-
-  5 - Clicar em GERAR URL
-
-  6 - Clicar em COPIAR URL
+  // ================================
   
-  PRONTO! Você tem em mãos a URL_NOVA! Substitua na variável abaixo
+  // Preparar a URL do conteúdo, tirando 
+  const NOVA_URL = "https://conteudo-kenzie-fullstack.vercel.app/" + LOCALHOST_URL.substring(22)
 
-  ======================= EXECUTANDO =============================
 
-  Abra um terminal na pasta deste projeto e digite o comando:
-
-  $ yarn justdoit
-
-  No final do processo, imagens da navegação são guardadas em ordem
-  na pasta /navigation_history
-  
-  */
-
-  const TITULO_DO_CURSO = 'M2 - Modelo' 
-  const TITULO_DA_AULA = "S2A07 |  📘  Aula - POO:  Acessores Getters e Setters para Objetos"
-  const NOVA_URL = `https://conteudo-kenzie-fullstack.vercel.app/modulo_2/sprint_2/semana_a/terca/acessores_getters_e_setters_para_objetos/aula.html`
-
+  // Inicia um navegador
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  // Acesso ao Canvas Web
+  // Acesso ao Canvas
   await page.goto("https://alunos.kenzie.com.br/");
-  console.log("\nAcesso ao Canvas \n");
+  console.log("\nAbrindo página do Canvas\n");
 
-  // Verificar se precisa de Login procurando o elemento input
+  // Através do ID do input de usuário do Canvas, sabemos se estamos na página de Login
   const usernameInput = await page.$$("#pseudonym_session_unique_id");
 
   console.log(usernameInput.length !== 0 ? "\nLogando no Canvas\n" : "\nUsuário já logado, continuando\n");
@@ -75,7 +41,7 @@ require("dotenv").config({ path: ".env" });
 
   if (usernameInput.length !== 0) {
 
-    // Fill credentials
+    // Preenchendo formulário de Login
     await page.type(
         "#pseudonym_session_unique_id",
         `${process.env.CANVAS_USER}`
@@ -85,55 +51,75 @@ require("dotenv").config({ path: ".env" });
         `${process.env.CANVAS_PWD}`
     );
 
-    // Submit Form
+    // Submissão do formulário de Login
+    await page.click("#pseudonym_session_remember_me")
     await page.click(".Button--login");
-    // await page.waitForNavigation({ waitUntil: "networkidle0" });
     await page.waitForNetworkIdle({ idleTime: 500})
-    console.log("\nLogin efetuado com sucesso \n");
+    
+    const loginError = await page.$$(".ic-flash-error")
+    console.log(loginError)
+
+    if (loginError.length > 0) {
+      console.log("\nCredenciais de Login incorretas!\n")
+      process.exit(1)
+    }
+
+    console.log("\nLogin efetuado com sucesso\n");
   }
 
   await page.screenshot({ path: "./navigation_history/02-afterLogin.png" });
 
-  // Acessar pagina do Curso
+  // Verificar se o Curso aparece no Dashboard do usuário
   const courseLink = await page.$$(`[title='${TITULO_DO_CURSO}']`);
 
   if (courseLink.length === 0) {
 
+    // Não foi encontrado, mensagem de erro + exit
     console.log('\nCurso não encontrado, ou você ainda não possui acesso ao mesmo.\n')
     process.exit(1)
   }
+  
 
+  console.log("\nCurso encontrado, acessando página do Curso")
   await page.click(`[title='${TITULO_DO_CURSO}']`);
   await page.waitForNetworkIdle({ idleTime: 500})
   await page.screenshot({ path: "./navigation_history/03-coursePage.png" });
-  console.log("\nAcessando a página do curso \n")
+  console.log("\nAcesso à página do Curso bem sucedido \n")
 
-  // Acessar aula especificada
+  // Loga os nomes de todos os títulos das Aulas do Curso escolhido
+  const titles = await page.$$eval(".ig-title", el => el.map(x => x.getAttribute("title")));
+  console.log(titles)
 
+  // Verificar se a Aula especificada existe
   const contentLink = await page.$$(`[title='${TITULO_DA_AULA}']`);
 
   if (contentLink.length === 0) {
 
+    // Não foi encontrada, mensagem de erro + exit
     console.log('\nConteúdo não encontrado.\n')
     process.exit(1)
   }
 
+  // Foi encontrada, navega até a página da Aula
+  console.log("\nAula encontrada, acessando página da Aula\n")
   await page.click(`[title='${TITULO_DA_AULA}']`)
   await page.waitForNetworkIdle({ idleTime: 500})
   await page.screenshot({ path: "./navigation_history/04-contentPage.png" });
-  console.log("\nAcessando pagina do conteudo \n")
+  console.log("\nAcesso à página da Aula bem-sucedido \n")
 
   // Acessar edição da aula
+  console.log("\nAcessando pagina de edicao \n")
   await page.click(".edit_assignment_link")
   await page.waitForNetworkIdle({ idleTime: 500})
   await page.screenshot({ path: "./navigation_history/05-contentEditPage.png" });
-  console.log("\nAcessando pagina de edicao \n")
+  console.log("\nAcesso à página de edição bem sucedido \n")
 
   // Acessar Editor HTML
+  console.log("\nAcessando Editor de HTML \n")
   await page.click(".rte_switch_views_link")
   await page.waitForNetworkIdle({ idleTime: 500})
   await page.screenshot({ path: "./navigation_history/06-contentEditHTMLPage.png" });
-  console.log("\nAcessando edicao de HTML \n")
+  console.log("\nAcesso ao Editor de HTML bem sucedido \n")
 
   // Capturando HTML Antigo
   let iframeContent = await page.$eval("#assignment_description", el => el.textContent)
@@ -157,14 +143,16 @@ require("dotenv").config({ path: ".env" });
 
   await page.screenshot({ path: "./navigation_history/07-migrationEnd.png" });
 
-  console.log("\nEdicao finalizada \n")
+  console.log("\nEdição finalizada \n")
 
   // Salvando edicao
+  console.log("\nSalvando alterações \n")
   await page.click(".btn-primary");
   await page.waitForNetworkIdle({ idleTime: 500})
   await page.screenshot({ path: "./navigation_history/08-contentSaved.png" });
 
-  console.log("\nSalvando edicoes \n")
+  console.log("\nProcesso finalizado \n")
 
   await browser.close();
+  process.exit(0)
 })();
