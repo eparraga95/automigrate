@@ -41,25 +41,13 @@ $ yarn
 
   https://i.imgur.com/pTpx1gD.png
 
-#### URL_NOVA
+#### LOCALHOST_URL
 
-  Assumindo que você quer fazer a migração do conteúdo, você deve
-  ter acesso ao repositório em que o mesmo se encontra. Seguindo os
-  passos abaixo, podemos gerar a nova URL:
+  - Abra a página do contéudo com o LiveServer
 
-  1 - Abrir o arquivo com o LiveServer
+  - Copie a URL do localhost (completa)
 
-  2 - Copiar a URL (mesmo com o http://seu.ip.local/)
-
-  3 - Abrir este CODE PEN: https://codepen.io/eparragakenzie/pen/PoOgKOp
-
-  4 - Colocar a URL copiada na Input
-
-  5 - Clicar em GERAR URL
-
-  6 - Clicar em COPIAR URL
-  
-  PRONTO! Você tem em mãos a URL de produção! Substitua na variável URL_NOVA!
+  - Cole no valor da variável
 
 ### EXECUTANDO 
 
