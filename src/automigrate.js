@@ -8,14 +8,14 @@ require("dotenv").config({ path: ".env" });
   // ========= CONFIGURAÇÕES ========
 
   // Título correto do Curso
-  const TITULO_DO_CURSO = "M2 - Modelo"
+  const TITULO_DO_CURSO = "🗂️ M4 - Turma 9 - 2021/Set "
 
   // Título correto da Aula
-  const TITULO_DA_AULA = "Teste Titulo Com Emoji 🏆"
+  const TITULO_DA_AULA = "🏁 Entrega 09 - Capstone Node - Entrega Final"
 
   // CTRL + A  e  CTRL + C no Navegador com a página do localhost aberta através do LiveServer
   // Deve começar com http:// ...
-  const LOCALHOST_URL = "http://127.0.0.1:5500/modulo_4/sprint_1/quarta/services_controllers_e_primeiro_crud/aula.html"
+  const LOCALHOST_URL = "http://127.0.0.1:5500/modulo_4/sprint_7/capstone_6_entrega/index.html"
 
   
   // ================================
