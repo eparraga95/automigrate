@@ -8,16 +8,15 @@ require("dotenv").config({ path: ".env" });
   // ========= CONFIGURAÇÕES ========
 
   // Título correto do Curso
-  const TITULO_DO_CURSO = "🗂️ M4 - Turma 9 - 2021/Set "
+  const TITULO_DO_CURSO = ""
 
   // Título correto da Aula
-  const TITULO_DA_AULA = "🏁 Entrega 09 - Capstone Node - Entrega Final"
+  const TITULO_DA_AULA = ""
 
   // CTRL + A  e  CTRL + C no Navegador com a página do localhost aberta através do LiveServer
   // Deve começar com http:// ...
-  const LOCALHOST_URL = "http://127.0.0.1:5500/modulo_4/sprint_7/capstone_6_entrega/index.html"
+  const LOCALHOST_URL = ""
 
-  
   // ================================
   
   // Preparar a URL do conteúdo, tirando 
@@ -28,9 +27,9 @@ require("dotenv").config({ path: ".env" });
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  // Acesso ao Canvas
-  await page.goto("https://alunos.kenzie.com.br/");
-  console.log("\nAbrindo página do Canvas\n");
+  // Acesso ao Canvas Web
+  await page.goto("https://canvas.kenzie.com.br/");
+  console.log("\nAcesso ao Canvas \n");
 
   // Através do ID do input de usuário do Canvas, sabemos se estamos na página de Login
   const usernameInput = await page.$$("#pseudonym_session_unique_id");
@@ -56,13 +55,13 @@ require("dotenv").config({ path: ".env" });
     await page.click(".Button--login");
     await page.waitForNetworkIdle({ idleTime: 500})
     
-    const loginError = await page.$$(".ic-flash-error")
-    console.log(loginError)
+    // const loginError = await page.$$(".ic-flash-error")
+    // console.log(loginError)
 
-    if (loginError.length > 0) {
-      console.log("\nCredenciais de Login incorretas!\n")
-      process.exit(1)
-    }
+    // if (loginError.length > 0) {
+    //   console.log("\nCredenciais de Login incorretas!\n")
+    //   process.exit(1)
+    // }
 
     console.log("\nLogin efetuado com sucesso\n");
   }
@@ -71,6 +70,8 @@ require("dotenv").config({ path: ".env" });
 
   // Verificar se o Curso aparece no Dashboard do usuário
   const courseLink = await page.$$(`[title='${TITULO_DO_CURSO}']`);
+
+  // console.log(courseLink)
 
   if (courseLink.length === 0) {
 
@@ -108,46 +109,62 @@ require("dotenv").config({ path: ".env" });
   console.log("\nAcesso à página da Aula bem-sucedido \n")
 
   // Acessar edição da aula
-  console.log("\nAcessando pagina de edicao \n")
-  await page.click(".edit_assignment_link")
-  await page.waitForNetworkIdle({ idleTime: 500})
-  await page.screenshot({ path: "./navigation_history/05-contentEditPage.png" });
-  console.log("\nAcesso à página de edição bem sucedido \n")
+
+  // Botoes antigos de cursos importador tem nome diferente
+  // dos botoes novos.
+
+  const oldEditButton = await page.$$(`[class*=edit_assignment_link]`)
+
+  const newEditButton = await page.$$(`[class*=edit-wiki]`)
+
+  if (oldEditButton.lenght > 0) {
+
+    await page.click('[class*=edit_assignment_link]')
+    await page.waitForNetworkIdle({ idleTime: 500})
+    await page.screenshot({ path: "./navigation_history/05-contentEditPage.png" });
+    console.log("\nAcesso à página de edição bem sucedido \n")
+
+  } 
+  
+  else {
+
+    await page.click('[class*=edit-wiki]')
+    await page.waitForNetworkIdle({ idleTime: 500})
+    await page.screenshot({ path: "./navigation_history/05-contentEditPage.png" });
+    console.log("\nAcesso à página de edição bem sucedido \n")
+
+  }
 
   // Acessar Editor HTML
   console.log("\nAcessando Editor de HTML \n")
-  await page.click(".rte_switch_views_link")
+  await page.click("[data-btn-id='rce-edit-btn']")
   await page.waitForNetworkIdle({ idleTime: 500})
   await page.screenshot({ path: "./navigation_history/06-contentEditHTMLPage.png" });
   console.log("\nAcesso ao Editor de HTML bem sucedido \n")
 
-  // Capturando HTML Antigo
-  let iframeContent = await page.$eval("#assignment_description", el => el.textContent)
-
-  // Focando o TextField que guarda o conteudo
-  await page.focus("#assignment_description");
+  // Acessar Editor HTML nao processado
+  console.log("\nAcessando Editor de HTML \n")
+  await page.click("[data-btn-id='rce-editormessage-btn']")
+  await page.waitForNetworkIdle({ idleTime: 500})
+  await page.screenshot({ path: "./navigation_history/06.1-contentEditHTMLPage.png" });
+  console.log("\nAcesso ao Editor de HTML nao processado bem sucedido \n")
 
   // Deletando o conteudo antigo
-  for (let i = 0; i < iframeContent.length; i++) {
-    await page.keyboard.press('Backspace');
-  }
+  await page.evaluate(() => {
+    let dom = document.querySelector('textarea');
+    dom.value = ""
+ });
 
-  // Preparando conteudo com nova URL
-  let newContent = `<p><iframe style="width: 100%; height: 1024px;" src="${NOVA_URL}" width="100%" height="1024px" allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen" mozallowfullscreen="mozallowfullscreen"></iframe></p>`
+  await page.type('textarea', `<p><iframe style="width: 100%; height: 1024px;" src="${NOVA_URL}" width="100%" height="1024px" allowfullscreen="allowfullscreen" webkitallowfullscreen="webkitallowfullscreen" mozallowfullscreen="mozallowfullscreen" allow="clipboard-read; clipboard-write"></iframe></p>`)
 
-  // Simulando digitacao da nova URL
-  await page.type(
-    "#assignment_description",
-    `${newContent}`
-  );
-
+ 
   await page.screenshot({ path: "./navigation_history/07-migrationEnd.png" });
 
   console.log("\nEdição finalizada \n")
 
   // Salvando edicao
   console.log("\nSalvando alterações \n")
-  await page.click(".btn-primary");
+  await page.click('[class*="btn-primary"]');
   await page.waitForNetworkIdle({ idleTime: 500})
   await page.screenshot({ path: "./navigation_history/08-contentSaved.png" });
 
